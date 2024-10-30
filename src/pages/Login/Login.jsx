@@ -84,7 +84,7 @@ export const Login = () => {
                     }}
                 >
                     <FormControl>
-                        <FormLabel sx={{textAlign: "left", color: 'white'}} >Email</FormLabel>
+                        <FormLabel sx={{textAlign: "left", color: 'black'}} >Email</FormLabel>
                         <TextField
                             error={!!error.email}
                             helperText={error.email}
@@ -104,7 +104,7 @@ export const Login = () => {
 
                     <FormControl>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <FormLabel htmlFor="password" sx={{color: 'white'}}>Password</FormLabel>
+                            <FormLabel htmlFor="password" sx={{color: 'black'}}>Password</FormLabel>
                             <Link
                                 component="button"
                                 type="button"
@@ -125,7 +125,7 @@ export const Login = () => {
                             required
                             fullWidth
                             variant="outlined"
-                            // color={passwordError ? 'error' : 'primary'}
+                            
                         />
                     </FormControl>
 

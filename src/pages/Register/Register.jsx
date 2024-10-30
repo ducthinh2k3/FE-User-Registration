@@ -101,7 +101,7 @@ export const Register = () => {
                     }}
                 >
                     <FormControl>
-                        <FormLabel sx={{textAlign: "left", color: 'white'}} >Email</FormLabel>
+                        <FormLabel sx={{textAlign: "left", color: 'black'}} >Email</FormLabel>
                         <TextField
                             error={!!error.email}
                             helperText={error.email}
@@ -121,7 +121,7 @@ export const Register = () => {
 
                     <FormControl>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <FormLabel htmlFor="password" sx={{color: 'white'}}>Password</FormLabel>
+                            <FormLabel htmlFor="password" sx={{color: 'black'}}>Password</FormLabel>
                         </Box>
                         <TextField
                             error={!!error.password}
@@ -138,7 +138,7 @@ export const Register = () => {
                     </FormControl>
 
                     <FormControl>
-                        <FormLabel sx={{textAlign: "left", color: 'white'}} >Repeat Password</FormLabel>
+                        <FormLabel sx={{textAlign: "left", color: 'black'}} >Repeat Password</FormLabel>
                         <TextField
                             error={!!error.rePassword}
                             helperText={error.rePassword}
