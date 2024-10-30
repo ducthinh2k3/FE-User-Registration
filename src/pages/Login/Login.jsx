@@ -19,7 +19,7 @@ export const Login = () => {
 
     const handleSignUpClick = (event) => {
         event.preventDefault(); // Ngăn chặn hành vi mặc định của thẻ <a>
-        window.location.href = '/register';// Điều hướng đến /register
+        navigate('/register');// Điều hướng đến /register
       };
 
     const handleSubmit = async (event) => {
