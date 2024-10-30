@@ -1,16 +1,29 @@
 import { Box, Button, Checkbox, Divider, FormControl, FormControlLabel, FormLabel, TextField} from '@mui/material';
 import Typography from '@mui/material/Typography';
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FacebookIcon, GoogleIcon} from '../../../components/CustomIcon/CustomIcon';
 import ValidationLogin from '../../../components/ValidateForm/ValidateLogin';
 import FormContainer from '../../../components/Form/FormContainer';
 import Card from '../../../components/Form/Card';
+import { postDataToAPI } from '../../ultis/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Spinner from '../../../components/spinner/Spinner';
 
 export const Login = () => {
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('')
+    const notify = (text) => toast(text);
+    const navigate = useNavigate()
 
-    const handleSubmit = (event) => {
+    const handleSignUpClick = (event) => {
+        event.preventDefault(); // Ngăn chặn hành vi mặc định của thẻ <a>
+        window.location.href = '/register';// Điều hướng đến /register
+      };
+
+    const handleSubmit = async (event) => {
+        setIsLoading(true);
         console.log("Form Submitted");
         event.preventDefault();
         const email = document.getElementById('email').value;
@@ -21,17 +34,33 @@ export const Login = () => {
         console.log(errorInput)
 
         if(Object.keys(errorInput).length === 0){
-            console.log({
-                email,
-                password
-            });
+            try {
+                const res =await postDataToAPI('/user/login', {
+                    email,
+                    password
+                })
+                setIsLoading(false)
+                console.log(res);
+                if(res.status === 202){
+                    localStorage.setItem('isAuthenticated', 'true');
+                    notify("Login successful")
+                    navigate('/');
+                    // setTimeout(() => {
+                    //     navigate('/login');
+                    // }, 1000);
+                }
+            } catch (error) {
+                setIsLoading(false)
+                console.log(error.response)
+                notify(error.response.data.details[0])
+            }
         }
     }
 
     return (
         <>
         <FormContainer direction="column" justifyContent="space-between">
-            {/* <ColorModel sx={{ position: 'fixed', top: '1rem', right: '1rem' }} /> */}
+            {isLoading ? <Spinner/> : 
             <Card variant="outlined">
                 {/* <SitemarkIcon /> */}
                 <Typography
@@ -113,13 +142,14 @@ export const Login = () => {
                     <Typography sx={{ textAlign: 'center' }}>
                         Don&apos;t have an account?{' '}
                         <span>
-                            <Link
+                        <Link
                             href="/material-ui/getting-started/templates/sign-in/"
                             variant="body2"
+                            onClick={handleSignUpClick}
                             sx={{ alignSelf: 'center' }}
                             >
                             Sign up
-                            </Link>
+                        </Link>
                         </span>
                     </Typography>
                 </Box>
@@ -143,7 +173,9 @@ export const Login = () => {
                     </Button>
                 </Box>
             </Card>
+            }
         </FormContainer>
+        <ToastContainer />
         </>
     )
 }

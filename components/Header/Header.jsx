@@ -11,6 +11,11 @@ export const Header = () => {
         setIsOpen(!isOpen);
     }
 
+    const handleLogout = () => {
+        localStorage.removeItem('isAuthenticated'); // Xóa khỏi localStorage
+        navigate('/login'); // Điều hướng về trang Login
+      };
+
     return (
         <div>
             <nav>
@@ -25,8 +30,8 @@ export const Header = () => {
                 <li><a href="#about">About</a></li>
                 <li><a href="#services">Services</a></li>
                 <li><a href="#pages">Pages</a></li>
-                <li><a href="#blog">Blog</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a onClick={() => navigate('/login')}>Login</a></li>
+                <li><a onClick={handleLogout}>Logout</a></li>
             </ul>
             </nav>
         </div>

@@ -1,17 +1,48 @@
 import { Box, Button, Checkbox, Divider, FormControl, FormControlLabel, FormLabel, TextField} from '@mui/material';
 import Typography from '@mui/material/Typography';
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 import { FacebookIcon, GoogleIcon} from '../../../components/CustomIcon/CustomIcon';
 import ValidationLogin from '../../../components/ValidateForm/ValidateLogin';
 import FormContainer from '../../../components/Form/FormContainer';
 import Card from '../../../components/Form/Card';
 import ValidationRegister from '../../../components/ValidateForm/ValidateRegister';
+import { fetchDataFromAPI, postDataToAPI } from '../../ultis/api';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Spinner from '../../../components/spinner/Spinner';
+import { Link as RouterLink } from 'react-router-dom';
 
 export const Register = () => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [errorLoading, setErrorLoading] = useState(null);
     const [error, setError] = useState('')
+    const navigate = useNavigate();
+    const notify = (text) => toast(text);
 
-    const handleSubmit = (event) => {
+    // async function fetchData(){
+    //     setIsLoading(true);
+    //     // setData(null);
+    //     setErrorLoading(null);
+    //     try {
+    //         console.log("call")
+    //         const data = await fetchDataFromAPI(`/user/get-users`);
+    //         console.log("response")
+    //         console.log(data)
+    //         setIsLoading(false)
+
+    //     } catch (error) {
+    //         setIsLoading(false)
+    //         setErrorLoading(error);
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     fetchData();
+    // }, []);
+
+    const handleSubmit = async (event) => {
+        setIsLoading(true);
         console.log("Form Submitted");
         event.preventDefault();
         const email = document.getElementById('email').value;
@@ -22,16 +53,32 @@ export const Register = () => {
         console.log(errorInput)
 
         if(Object.keys(errorInput).length === 0){
-            console.log({
-                email,
-                password
-            });
+            try {
+                const res =await postDataToAPI('/user/register', {
+                    email,
+                    password
+                })
+                setIsLoading(false)
+                console.log(res);
+                if(res.status === 201){
+                    console.log("ok")
+                    notify("Create account succesfully")
+                    setTimeout(() => {
+                        navigate('/login');
+                    }, 1000);
+                }
+            } catch (error) {
+                setIsLoading(false)
+                console.log(error.response)
+                notify(error.response.data.details[0])
+            }
         }
     }
 
     return (
         <>
         <FormContainer direction="column" justifyContent="space-between">
+            {isLoading ? <Spinner/> : 
             <Card variant="outlined">
                 <Typography
                     component="h4"
@@ -115,15 +162,17 @@ export const Register = () => {
                     >
                         Sign Up
                     </Button>
+                    
                     <Typography sx={{ textAlign: 'center' }}>
                         Already have an account?{' '}
                         <span>
                             <Link
-                            href="/material-ui/getting-started/templates/sign-in/"
-                            variant="body2"
-                            sx={{ alignSelf: 'center' }}
-                            >
-                            Sign in
+                                component={RouterLink}
+                                to="/login" // Điều hướng sử dụng react-router-dom
+                                variant="body2"
+                                sx={{ alignSelf: 'center' }}
+                                >
+                                    Sign In
                             </Link>
                         </span>
                     </Typography>
@@ -148,7 +197,9 @@ export const Register = () => {
                     </Button>
                 </Box>
             </Card>
+            }   
         </FormContainer>
+        <ToastContainer />
         </>
     )
 }
