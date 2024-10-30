@@ -54,13 +54,15 @@ export const Login = () => {
                 console.log(error.response)
                 notify(error.response.data.details[0])
             }
+        } else {
+            setIsLoading(false)
         }
     }
 
     return (
         <>
         <FormContainer direction="column" justifyContent="space-between">
-            {isLoading ? <Spinner/> : 
+            
             <Card variant="outlined">
                 {/* <SitemarkIcon /> */}
                 <Typography
@@ -131,6 +133,7 @@ export const Login = () => {
                         control={<Checkbox value="remember" color="primary" />}
                         label="Remember me"
                     />
+                    {isLoading ? <Spinner/> : 
                     <Button
                         type="submit"
                         fullWidth
@@ -139,6 +142,7 @@ export const Login = () => {
                     >
                         Sign in
                     </Button>
+                        }
                     <Typography sx={{ textAlign: 'center' }}>
                         Don&apos;t have an account?{' '}
                         <span>
@@ -173,7 +177,7 @@ export const Login = () => {
                     </Button>
                 </Box>
             </Card>
-            }
+            
         </FormContainer>
         <ToastContainer />
         </>

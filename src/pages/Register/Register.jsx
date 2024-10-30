@@ -72,13 +72,15 @@ export const Register = () => {
                 console.log(error.response)
                 notify(error.response.data.details[0])
             }
+        } else {
+            setIsLoading(false)
         }
     }
 
     return (
         <>
         <FormContainer direction="column" justifyContent="space-between">
-            {isLoading ? <Spinner/> : 
+            
             <Card variant="outlined">
                 <Typography
                     component="h4"
@@ -154,6 +156,7 @@ export const Register = () => {
                         control={<Checkbox value="remember" color="primary" />}
                         label="I want to receive updates via email."
                     />
+                    {isLoading ? <Spinner/> : 
                     <Button
                         type="submit"
                         fullWidth
@@ -162,6 +165,7 @@ export const Register = () => {
                     >
                         Sign Up
                     </Button>
+                    }
                     
                     <Typography sx={{ textAlign: 'center' }}>
                         Already have an account?{' '}
@@ -197,7 +201,7 @@ export const Register = () => {
                     </Button>
                 </Box>
             </Card>
-            }   
+             
         </FormContainer>
         <ToastContainer />
         </>
