@@ -60,8 +60,12 @@ export const Login = () => {
                 }
             } catch (error) {
                 setIsLoading(false)
-                console.log(error.response)
-                notify(error.response.data.details[0])
+                console.log(error)
+                if(error?.response?.data?.details[0]){
+                    notify(error.response.data.details[0])
+                } else if (error?.message){
+                    notify(error.message)
+                }
             }
         } else {
             setIsLoading(false)
