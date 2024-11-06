@@ -1,21 +1,25 @@
 import { Box, Button, Checkbox, Divider, FormControl, FormControlLabel, FormLabel, TextField} from '@mui/material';
 import Typography from '@mui/material/Typography';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { FacebookIcon, GoogleIcon} from '../../../components/CustomIcon/CustomIcon';
 import ValidationLogin from '../../../components/ValidateForm/ValidateLogin';
 import FormContainer from '../../../components/Form/FormContainer';
 import Card from '../../../components/Form/Card';
-import { postDataToAPI } from '../../ultis/api';
+import { fetchDataFromAPI, postDataToAPI } from '../../ultis/api';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Spinner from '../../../components/spinner/Spinner';
+import { useDispatch } from 'react-redux';
+import { saveUserLogin } from '../../redux/action';
 
 export const Login = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('')
     const notify = (text) => toast(text);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
 
     const handleSignUpClick = (event) => {
         event.preventDefault(); // Ngăn chặn hành vi mặc định của thẻ <a>
@@ -35,19 +39,24 @@ export const Login = () => {
 
         if(Object.keys(errorInput).length === 0){
             try {
-                const res =await postDataToAPI('/user/login', {
+                const res =await postDataToAPI('/login', {
                     email,
                     password
                 })
                 setIsLoading(false)
                 console.log(res);
                 if(res.status === 202){
-                    localStorage.setItem('isAuthenticated', 'true');
+                    localStorage.setItem("jwt", res.token);
+                    const userInfo = await fetchDataFromAPI("/profile", res.token);
+                    console.log(userInfo);
+                    dispatch(saveUserLogin({
+                        email: userInfo.data.email,
+                        token: res.token
+                    }))
                     notify("Login successful")
-                    navigate('/');
-                    // setTimeout(() => {
-                    //     navigate('/login');
-                    // }, 1000);
+                    setTimeout(() => {
+                        navigate('/');
+                    }, 1000);
                 }
             } catch (error) {
                 setIsLoading(false)

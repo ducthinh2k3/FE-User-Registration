@@ -1,15 +1,18 @@
 import axios from "axios";
 const BASE_URL = "https://be-user-registration.onrender.com";
-// const headers = {
-//     Authorization: `Client-ID ${ACCESS_TOKEN}`
-// }
+const headers = {
+    
+}
 
-export const fetchDataFromAPI = async(url, headers) => {
+export const fetchDataFromAPI = async(url, token) => {
+    if (token) {
+        headers.Authorization = "Bearer " + token;
+    }
     try {
         const {data} = await axios.get(
             BASE_URL + url,
             {
-                headers,
+                headers: headers,
                 // params
             }
         )
@@ -21,15 +24,15 @@ export const fetchDataFromAPI = async(url, headers) => {
 }
 
 export const postDataToAPI = async(url, body, token, cookie, params) => {
+    if (token) {
+        headers.Authorization = "Bearer " + token;
+    }
     try {
         const {data} = await axios.post(
             BASE_URL + url,
             body,
             {
-                headers: {
-                    Authorization: "Bearer " + token,
-                    Cookie: cookie
-                },
+                headers: headers,
                 params,
                 withCredentials: true
             }

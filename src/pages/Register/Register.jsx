@@ -20,27 +20,6 @@ export const Register = () => {
     const navigate = useNavigate();
     const notify = (text) => toast(text);
 
-    // async function fetchData(){
-    //     setIsLoading(true);
-    //     // setData(null);
-    //     setErrorLoading(null);
-    //     try {
-    //         console.log("call")
-    //         const data = await fetchDataFromAPI(`/user/get-users`);
-    //         console.log("response")
-    //         console.log(data)
-    //         setIsLoading(false)
-
-    //     } catch (error) {
-    //         setIsLoading(false)
-    //         setErrorLoading(error);
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     fetchData();
-    // }, []);
-
     const handleSubmit = async (event) => {
         setIsLoading(true);
         console.log("Form Submitted");
@@ -54,7 +33,7 @@ export const Register = () => {
 
         if(Object.keys(errorInput).length === 0){
             try {
-                const res =await postDataToAPI('/user/register', {
+                const res =await postDataToAPI('/register', {
                     email,
                     password
                 })
